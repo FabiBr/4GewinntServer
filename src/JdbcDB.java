@@ -34,13 +34,13 @@ public class JdbcDB {
 			System.out.println("Opened database successfully");
 
 			stmt = c.createStatement();
-			String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS"
+			String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS "
 					+ USER_TABLE + " (" + USER_ID_KEY
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME_KEY
 					+ " TEXT, " + USER_PW_KEY + " TEXT, " + USER_GWON_KEY
 					+ " INTEGER, " + USER_GLOST_KEY + " INTEGER, "
 					+ USER_PREMIUM_KEY + " INTEGER)";
-			String CREATE_GAMES_TABLE = "CREATE TABLE IF NOT EXISTS"
+			String CREATE_GAMES_TABLE = "CREATE TABLE IF NOT EXISTS "
 					+ GAMES_TABLE + " (" + GAMES_ID_KEY
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + GAMES_FIELD_KEY
 					+ " TEXT, " + GAMES_P1_KEY + " INTEGER, " + GAMES_P2_KEY
