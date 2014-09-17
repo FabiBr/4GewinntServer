@@ -6,13 +6,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import sun.security.ssl.Debug;
 
 public class Server extends Thread {
+
 	private static ServerSocket serverSocket = null;
 	public static final int SERVERPORT = 4444;
+	private static JdbcDB myDb = new JdbcDB();
+
+	private static final String INSERT_NEWUSER_KEY = "newUserInsert";
+	private static final String INSERT_GAME_KEY = "newGameInsert";
+	private static final String INCREMENT_USER_WIN_KEY = "userWins";
 
 	public static void main(String[] args) throws IOException {
 
@@ -75,12 +84,43 @@ public class Server extends Thread {
 				try {
 
 					String read = input.readLine();
+					handleConnection(read);
 					System.out.println(read);
 
-				} catch (IOException e) {
+				} catch (IOException | SQLException e) {
 					e.printStackTrace();
 				}
 			}
+		}
+
+		private void handleConnection(String read) throws SQLException {
+			StringTokenizer tok = new StringTokenizer(read);
+			ArrayList<String> data = new ArrayList<String>();
+			while (tok.hasMoreElements()) {
+				data.add(tok.nextToken());
+			}
+			String key = data.get(0);
+
+			switch (key) {
+			case INSERT_NEWUSER_KEY:
+				String username = data.get(1);
+				String pw = data.get(2);
+				myDb.insertNewUser(username, pw);
+				break;
+
+			case INSERT_GAME_KEY:
+
+				break;
+
+			case INCREMENT_USER_WIN_KEY:
+
+				break;
+
+
+			default:
+				break;
+			}
+
 		}
 
 	}
