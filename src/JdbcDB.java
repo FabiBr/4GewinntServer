@@ -1,6 +1,5 @@
 import java.sql.*;
 
-
 public class JdbcDB {
 
 	// usersTableKeys
@@ -22,7 +21,7 @@ public class JdbcDB {
 	private static final String GAMES_P1_KEY = "player1";
 	private static final String GAMES_P2_KEY = "player2";
 	private static final String GAMES_LASTPLAYER_KEY = "lastPlayer";
-	
+
 	Connection c = null;
 	Statement stmt = null;
 
@@ -55,42 +54,30 @@ public class JdbcDB {
 		}
 		System.out.println("Table created successfully");
 	}
-	
-	
-	public void insertNewUser(String username, String userPw) throws SQLException {
 
-	      stmt = c.createStatement();
+	public void insertNewUser(String username, String userPw) throws SQLException {
+		c = DriverManager.getConnection("jdbc:sqlite:test.db");
+	    stmt = c.createStatement();
 	      
-	      String sql = "INSERT INTO USERS (" + USER_NAME_KEY + "," + USER_PW_KEY + ","
-		  			+ USER_GWON_KEY + "," + USER_GLOST_KEY + "," + USER_PREMIUM_KEY + ")" + "VALUES (" + username + ", " + userPw + ", 0, 0, 0)";
-	      stmt.executeUpdate(sql);
+	    String sql = "INSERT INTO USERS (" + USER_NAME_KEY + "," + USER_PW_KEY + ","
+		  			+ USER_GWON_KEY + "," + USER_GLOST_KEY + "," + USER_PREMIUM_KEY + ")" + "VALUES ('" + username + "', '" + userPw + "', '0', '0', '0')";
+	    System.out.println(sql);
+	    stmt.executeUpdate(sql);
+	    stmt.close();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
 
-
-/*String CREATE_USER_TABLE = "create table if not exists"
-		+ USER_TABLE + " (" + USER_ID_KEY
-		+ " integer primary key autoincrement, " + USER_NAME_KEY
-		+ " text, " + USER_PW_KEY + " text, " + USER_GWON_KEY
-		+ " integer, " + USER_GLOST_KEY + " integer, "
-		+ USER_PREMIUM_KEY + " integer)";
-String CREATE_GAMES_TABLE = "create table if not exists"
-		+ GAMES_TABLE + " (" + GAMES_ID_KEY
-		+ " integer primary key autoincrement, " + GAMES_FIELD_KEY
-		+ " text, " + GAMES_P1_KEY + " integer, " + GAMES_P2_KEY
-		+ " integer, " + GAMES_LASTPLAYER_KEY + " integer)";*/
-
-
-
-
+/*
+ * String CREATE_USER_TABLE = "create table if not exists" + USER_TABLE + " (" +
+ * USER_ID_KEY + " integer primary key autoincrement, " + USER_NAME_KEY +
+ * " text, " + USER_PW_KEY + " text, " + USER_GWON_KEY + " integer, " +
+ * USER_GLOST_KEY + " integer, " + USER_PREMIUM_KEY + " integer)"; String
+ * CREATE_GAMES_TABLE = "create table if not exists" + GAMES_TABLE + " (" +
+ * GAMES_ID_KEY + " integer primary key autoincrement, " + GAMES_FIELD_KEY +
+ * " text, " + GAMES_P1_KEY + " integer, " + GAMES_P2_KEY + " integer, " +
+ * GAMES_LASTPLAYER_KEY + " integer)";
+ */
 
 /*
  * public static void main(String args[]) { Connection c = null; Statement stmt

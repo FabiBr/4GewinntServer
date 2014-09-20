@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.Console;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -62,6 +64,7 @@ public class Server extends Thread {
 		private Socket clientSocket;
 
 		private BufferedReader input;
+		private PrintWriter output;
 
 		public CommunicationThread(Socket clientSocket) {
 
@@ -71,6 +74,7 @@ public class Server extends Thread {
 
 				this.input = new BufferedReader(new InputStreamReader(
 						this.clientSocket.getInputStream()));
+				
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -79,18 +83,26 @@ public class Server extends Thread {
 
 		public void run() {
 
-			while (!Thread.currentThread().isInterrupted()) {
+			//while (!Thread.currentThread().isInterrupted()) {
 
 				try {
 
 					String read = input.readLine();
 					handleConnection(read);
+					output = new PrintWriter(
+							new BufferedWriter(new OutputStreamWriter(
+									clientSocket.getOutputStream())), true);
+					output.println("User succesfully created");
+					output.flush();
 					System.out.println(read);
 
-				} catch (IOException | SQLException e) {
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			//}
 		}
 
 		private void handleConnection(String read) throws SQLException {
