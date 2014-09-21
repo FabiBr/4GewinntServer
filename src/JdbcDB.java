@@ -1,5 +1,7 @@
 import java.sql.*;
 
+
+
 public class JdbcDB {
 
 	// usersTableKeys
@@ -29,7 +31,7 @@ public class JdbcDB {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:test.db");
+			c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
 			System.out.println("Opened database successfully");
 
 			stmt = c.createStatement();
@@ -56,14 +58,28 @@ public class JdbcDB {
 	}
 
 	public void insertNewUser(String username, String userPw) throws SQLException {
-		c = DriverManager.getConnection("jdbc:sqlite:test.db");
+		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
 	    stmt = c.createStatement();
 	      
 	    String sql = "INSERT INTO USERS (" + USER_NAME_KEY + "," + USER_PW_KEY + ","
 		  			+ USER_GWON_KEY + "," + USER_GLOST_KEY + "," + USER_PREMIUM_KEY + ")" + "VALUES ('" + username + "', '" + userPw + "', '0', '0', '0')";
 	    System.out.println(sql);
 	    stmt.executeUpdate(sql);
+	    System.out.println("update succesful");
 	    stmt.close();
+	    c.close();
+	}
+
+	public String getPwByUsername(String username1) throws SQLException {
+		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+	    stmt = c.createStatement();
+	    
+	    String sql = "SELECT " + USER_PW_KEY + " FROM " + USER_TABLE + " WHERE " + USER_NAME_KEY + "=" + "'" + username1 + "'";
+	    ResultSet rs = stmt.executeQuery(sql);
+	    String pw = rs.getString(USER_PW_KEY);
+	    stmt.close();
+	    c.close();
+		return pw;
 	}
 
 }

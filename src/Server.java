@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+
 import sun.security.ssl.Debug;
 
 public class Server extends Thread {
@@ -24,6 +25,8 @@ public class Server extends Thread {
 	private static final String INSERT_NEWUSER_KEY = "newUserInsert";
 	private static final String INSERT_GAME_KEY = "newGameInsert";
 	private static final String INCREMENT_USER_WIN_KEY = "userWins";
+	private static final String PASSWORD_CHECK_KEY = "checkPw";
+	
 
 	public static void main(String[] args) throws IOException {
 
@@ -88,11 +91,11 @@ public class Server extends Thread {
 				try {
 
 					String read = input.readLine();
-					handleConnection(read);
+					String callback = handleConnection(read);
 					output = new PrintWriter(
 							new BufferedWriter(new OutputStreamWriter(
 									clientSocket.getOutputStream())), true);
-					output.println("User succesfully created");
+					output.println(callback);
 					output.flush();
 					System.out.println(read);
 
@@ -105,7 +108,7 @@ public class Server extends Thread {
 			//}
 		}
 
-		private void handleConnection(String read) throws SQLException {
+		private String handleConnection(String read) throws SQLException {
 			StringTokenizer tok = new StringTokenizer(read);
 			ArrayList<String> data = new ArrayList<String>();
 			while (tok.hasMoreElements()) {
@@ -118,21 +121,29 @@ public class Server extends Thread {
 				String username = data.get(1);
 				String pw = data.get(2);
 				myDb.insertNewUser(username, pw);
-				break;
+				return "User succesfully created";
 
 			case INSERT_GAME_KEY:
 
-				break;
+				return null;
 
 			case INCREMENT_USER_WIN_KEY:
 
-				break;
+				return null;
+				
+			case PASSWORD_CHECK_KEY:
+				
+				String username1 = data.get(1);
+				String savedPw = myDb.getPwByUsername(username1);
+				if(savedPw.equals(data.get(2))) {
+					return "1";
+				}
+				return null;
 
 
 			default:
-				break;
+				return null;
 			}
-
 		}
 
 	}
