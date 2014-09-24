@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 
 
@@ -80,6 +81,27 @@ public class JdbcDB {
 	    stmt.close();
 	    c.close();
 		return pw;
+	}
+
+	public ArrayList<String[]> getAllUsers() throws SQLException {
+		ArrayList<String[]> users = new ArrayList<>();
+		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+	    stmt = c.createStatement();
+	    
+	    String sql = "SELECT * FROM " + USER_TABLE;
+	    ResultSet rs = stmt.executeQuery(sql);
+	    while ( rs.next() ) {
+	    	
+	    	String[] user = new String[rs.getMetaData().getColumnCount()+1];
+	    	user[1] = String.valueOf(rs.getInt(USER_ID_KEY));
+	    	user[2] = rs.getString(USER_NAME_KEY);
+	    	user[3] = rs.getString(USER_PW_KEY);
+	    	user[4] = String.valueOf(rs.getInt(USER_GWON_KEY));
+	    	user[5] = String.valueOf(rs.getInt(USER_GLOST_KEY));
+	    	user[6] = String.valueOf(rs.getInt(USER_PREMIUM_KEY));
+	    	users.add(user);
+	      }
+		return users;
 	}
 
 }

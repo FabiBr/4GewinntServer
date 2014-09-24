@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import org.json.*;
 
 
 import sun.security.ssl.Debug;
@@ -26,6 +27,7 @@ public class Server extends Thread {
 	private static final String INSERT_GAME_KEY = "newGameInsert";
 	private static final String INCREMENT_USER_WIN_KEY = "userWins";
 	private static final String PASSWORD_CHECK_KEY = "checkPw";
+	private static final String GET_ALL_USERS_KEY = "allUsersGet";
 	
 
 	public static void main(String[] args) throws IOException {
@@ -130,6 +132,13 @@ public class Server extends Thread {
 			case INCREMENT_USER_WIN_KEY:
 
 				return null;
+			
+			case GET_ALL_USERS_KEY:
+				ArrayList<String[]> allUsersData = myDb.getAllUsers();
+				JSONArray list = new JSONArray(allUsersData);
+				String out = list.toString();
+				System.out.println(out);
+				return out;
 				
 			case PASSWORD_CHECK_KEY:
 				
@@ -138,7 +147,7 @@ public class Server extends Thread {
 				if(savedPw.equals(data.get(2))) {
 					return "1";
 				}
-				return null;
+				return "Wrong password";
 
 
 			default:
