@@ -101,6 +101,8 @@ public class JdbcDB {
 	    	user[6] = String.valueOf(rs.getInt(USER_PREMIUM_KEY));
 	    	users.add(user);
 	      }
+	    stmt.close();
+	    c.close();
 		return users;
 	}
 
