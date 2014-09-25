@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class JdbcDB {
 
+	private static final String datapath = "jdbc:sqlite:C:/Users/Fabian/Desktop/test.db";
+	
 	// usersTableKeys
 	private static final String USER_TABLE = "users";
 
@@ -32,7 +34,7 @@ public class JdbcDB {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+			c = DriverManager.getConnection(datapath);
 			System.out.println("Opened database successfully");
 
 			stmt = c.createStatement();
@@ -59,7 +61,7 @@ public class JdbcDB {
 	}
 
 	public void insertNewUser(String username, String userPw) throws SQLException {
-		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	      
 	    String sql = "INSERT INTO USERS (" + USER_NAME_KEY + "," + USER_PW_KEY + ","
@@ -72,7 +74,7 @@ public class JdbcDB {
 	}
 
 	public String getPwByUsername(String username1) throws SQLException {
-		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
 	    String sql = "SELECT " + USER_PW_KEY + " FROM " + USER_TABLE + " WHERE " + USER_NAME_KEY + "=" + "'" + username1 + "'";
@@ -85,7 +87,7 @@ public class JdbcDB {
 
 	public ArrayList<String[]> getAllUsers() throws SQLException {
 		ArrayList<String[]> users = new ArrayList<>();
-		c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Fabian/Desktop/test.db");
+		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
 	    String sql = "SELECT * FROM " + USER_TABLE;
