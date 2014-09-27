@@ -79,10 +79,21 @@ public class JdbcDB {
 	    
 	    String sql = "SELECT " + USER_PW_KEY + " FROM " + USER_TABLE + " WHERE " + USER_NAME_KEY + "=" + "'" + username1 + "'";
 	    ResultSet rs = stmt.executeQuery(sql);
-	    String pw = rs.getString(USER_PW_KEY);
-	    stmt.close();
-	    c.close();
-		return pw;
+	    
+	    
+	    boolean isEmpty = true;
+	    while(rs.next()) {
+	    	isEmpty = false;
+	    }
+	    if(isEmpty) {
+	    	stmt.close();
+		    c.close();
+	    	return "";
+	    } else {
+	    	rs = stmt.executeQuery(sql);
+	    	String pw = rs.getString(USER_PW_KEY);
+	    	return pw;
+	    }
 	}
 
 	public ArrayList<String[]> getAllUsers() throws SQLException {
@@ -106,6 +117,17 @@ public class JdbcDB {
 	    stmt.close();
 	    c.close();
 		return users;
+	}
+	
+	public void createNewGame(String field, String user1, String user2) throws SQLException {
+		c = DriverManager.getConnection(datapath);
+	    stmt = c.createStatement();
+	    
+	    String sql = "INSERT INTO GAMES (" + GAMES_FIELD_KEY + "," + GAMES_P1_KEY + ","
+	  			+ GAMES_P2_KEY + "," + GAMES_LASTPLAYER_KEY + ")" + "VALUES ('" + field + "', '" + user1 + "', '" + user2 + "', '" + user1 + "')";
+	    stmt.executeUpdate(sql);
+	    stmt.close();
+	    c.close();	
 	}
 
 }
