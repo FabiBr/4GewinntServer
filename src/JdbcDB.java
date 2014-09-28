@@ -92,6 +92,8 @@ public class JdbcDB {
 	    } else {
 	    	rs = stmt.executeQuery(sql);
 	    	String pw = rs.getString(USER_PW_KEY);
+	    	stmt.close();
+		    c.close();
 	    	return pw;
 	    }
 	}
