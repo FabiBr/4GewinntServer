@@ -136,13 +136,21 @@ public class Server extends Thread {
 			case INCREMENT_USER_WIN_KEY:
 
 				return null;
+				
+			case GET_GAMES_KEY:
+				String user = data.get(1);
+				ArrayList<String[]> allGamesData = myDb.getAllGamesOfUser(user);
+				JSONArray gamesList = new JSONArray(allGamesData);
+				String gamesOut = gamesList.toString();
+				System.out.println(gamesOut);
+				return gamesOut;
 			
 			case GET_ALL_USERS_KEY:
 				ArrayList<String[]> allUsersData = myDb.getAllUsers();
 				JSONArray list = new JSONArray(allUsersData);
-				String out = list.toString();
-				System.out.println(out);
-				return out;
+				String usersOut = list.toString();
+				System.out.println(usersOut);
+				return usersOut;
 				
 			case PASSWORD_CHECK_KEY:
 				

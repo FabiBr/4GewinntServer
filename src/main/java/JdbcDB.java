@@ -138,17 +138,31 @@ public class JdbcDB {
 		return users;
 	}
 	
-	public void createNewGame(String field, String user1, String user2) throws SQLException {
+	public void insertNewField(int id) {
+		//TODO
+	}
+	
+	public ArrayList<String[]> getAllGamesOfUser(String user) throws SQLException {
+		ArrayList<String[]> games = new ArrayList<>();
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
-	    String sql = "INSERT INTO GAMES (" + GAMES_FIELD_KEY + "," + GAMES_P1_KEY + ","
-	  			+ GAMES_P2_KEY + "," + GAMES_LASTPLAYER_KEY + ")" + "VALUES ('" + field + "', '" + user1 + "', '" + user2 + "', '" + user1 + "')";
-	    stmt.executeUpdate(sql);
+	    String sql = "SELECT * FROM " + GAMES_TABLE + "WHERE" + GAMES_P1_KEY + "='" + user + "' OR " + GAMES_P2_KEY + "='" + user + "'";
+	    ResultSet rs = stmt.executeQuery(sql);
+	    while ( rs.next() ) {
+	    	
+	    	String[] game = new String[rs.getMetaData().getColumnCount()+1];
+	    	game[1] = String.valueOf(rs.getInt(GAMES_ID_KEY));
+	    	game[2] = rs.getString(GAMES_FIELD_KEY);
+	    	game[3] = rs.getString(GAMES_P1_KEY);
+	    	game[4] = rs.getString(GAMES_P2_KEY);
+	    	game[5] = rs.getString(GAMES_LASTPLAYER_KEY);
+	    	games.add(game);
+	      }
 	    stmt.close();
-	    c.close();	
+	    c.close();
+		return games;
 	}
-
 }
 
 /*
