@@ -1,4 +1,4 @@
-de\test\game\Server$ServerThread.class
-de\test\game\Server$CommunicationThread.class
-de\test\game\Server.class
-de\test\game\JdbcDB.class
+main\java\Server$CommunicationThread.class
+main\java\Server$ServerThread.class
+main\java\JdbcDB.class
+main\java\Server.class
