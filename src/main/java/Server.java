@@ -91,7 +91,6 @@ public class Server extends Thread {
 			//while (!Thread.currentThread().isInterrupted()) {
 
 				try {
-
 					String read = input.readLine();
 					String callback = handleConnection(read);
 					output = new PrintWriter(

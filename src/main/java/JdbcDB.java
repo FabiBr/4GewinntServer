@@ -147,7 +147,7 @@ public class JdbcDB {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
-	    String sql = "SELECT * FROM " + GAMES_TABLE + "WHERE" + GAMES_P1_KEY + "='" + user + "' OR " + GAMES_P2_KEY + "='" + user + "'";
+	    String sql = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_P1_KEY + "='" + user + "' OR " + GAMES_P2_KEY + "='" + user + "'";
 	    ResultSet rs = stmt.executeQuery(sql);
 	    while ( rs.next() ) {
 	    	
