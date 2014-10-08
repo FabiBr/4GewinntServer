@@ -163,6 +163,37 @@ public class JdbcDB {
 	    c.close();
 		return games;
 	}
+
+	public ArrayList<String> getGameById(String id) throws SQLException {
+		c = DriverManager.getConnection(datapath);
+	    stmt = c.createStatement();
+	    
+	    String sql = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ID_KEY + "=" + "'" + id + "'";
+	    ResultSet rs = stmt.executeQuery(sql);
+	    
+	    
+	    boolean isEmpty = true;
+	    while(rs.next()) {
+	    	isEmpty = false;
+	    }
+	    if(isEmpty) {
+	    	stmt.close();
+		    c.close();
+	    	return null;
+	    } else {
+	    	rs = stmt.executeQuery(sql);
+	    	
+	    	ArrayList<String> result = new ArrayList<String>();
+	    	result.add(rs.getString(GAMES_ID_KEY));
+	    	result.add(rs.getString(GAMES_FIELD_KEY));
+	    	result.add(rs.getString(GAMES_P1_KEY));
+	    	result.add(rs.getString(GAMES_P2_KEY));
+	    	result.add(rs.getString(GAMES_LASTPLAYER_KEY));
+	    	stmt.close();
+		    c.close();
+	    	return result;
+	    }
+	}
 }
 
 /*

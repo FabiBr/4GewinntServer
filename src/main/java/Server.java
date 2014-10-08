@@ -19,7 +19,7 @@ import org.json.*;
 public class Server extends Thread {
 
 	private static ServerSocket serverSocket = null;
-	public static final int SERVERPORT = 4444;
+	public static final int SERVERPORT = 1939;
 	private static JdbcDB myDb = new JdbcDB();
 
 	private static final String INSERT_NEWUSER_KEY = "newUserInsert";
@@ -28,6 +28,7 @@ public class Server extends Thread {
 	private static final String PASSWORD_CHECK_KEY = "checkPw";
 	private static final String GET_ALL_USERS_KEY = "allUsersGet";
 	private static final String GET_GAMES_KEY = "myGamesGet";
+	private static final String GET_GAME_BY_ID_KEY = "gameById";
 	
 
 	public static void main(String[] args) throws IOException {
@@ -143,6 +144,13 @@ public class Server extends Thread {
 				String gamesOut = gamesList.toString();
 				System.out.println(gamesOut);
 				return gamesOut;
+				
+			case GET_GAME_BY_ID_KEY:
+				String id = data.get(1);
+				ArrayList<String> gameData = myDb.getGameById(id);
+				JSONArray thisData = new JSONArray(gameData);
+
+				return thisData.toString();
 			
 			case GET_ALL_USERS_KEY:
 				ArrayList<String[]> allUsersData = myDb.getAllUsers();
