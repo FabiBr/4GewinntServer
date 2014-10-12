@@ -29,6 +29,7 @@ public class Server extends Thread {
 	private static final String GET_ALL_USERS_KEY = "allUsersGet";
 	private static final String GET_GAMES_KEY = "myGamesGet";
 	private static final String GET_GAME_BY_ID_KEY = "gameById";
+	private static final String MAKE_TURN_KEY = "fieldUpdate";
 	
 
 	public static void main(String[] args) throws IOException {
@@ -167,6 +168,12 @@ public class Server extends Thread {
 					return "1";
 				}
 				return "Wrong password";
+				
+			case MAKE_TURN_KEY:
+				String thisId = data.get(1);
+				String thisField = data.get(2);
+				myDb.makeTurn(thisId, thisField);
+				return "";
 
 
 			default:

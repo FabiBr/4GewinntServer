@@ -27,7 +27,7 @@ public class JdbcDB {
 	private static final String GAMES_FIELD_KEY = "field";
 	private static final String GAMES_P1_KEY = "player1";
 	private static final String GAMES_P2_KEY = "player2";
-	private static final String GAMES_LASTPLAYER_KEY = "lastPlayer";
+	private static final String GAMES_CURRENTPLAYER_KEY = "lastPlayer";
 
 	Connection c = null;
 	Statement stmt = null;
@@ -50,7 +50,7 @@ public class JdbcDB {
 					+ GAMES_TABLE + " (" + GAMES_ID_KEY
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + GAMES_FIELD_KEY
 					+ " TEXT, " + GAMES_P1_KEY + " TEXT, " + GAMES_P2_KEY
-					+ " TEXT, " + GAMES_LASTPLAYER_KEY + " TEXT)";
+					+ " TEXT, " + GAMES_CURRENTPLAYER_KEY + " TEXT)";
 			stmt.executeUpdate(CREATE_USER_TABLE);
 			stmt.executeUpdate(CREATE_GAMES_TABLE);
 			stmt.close();
@@ -62,12 +62,12 @@ public class JdbcDB {
 		System.out.println("Table created successfully");
 	}
 	
-	public void insertNewGame(String field, String user1, String user2, String currentUser) throws SQLException {
+	public synchronized void insertNewGame(String field, String user1, String user2, String currentUser) throws SQLException {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	      
 	    String sql = "INSERT INTO " + GAMES_TABLE +  "(" + GAMES_FIELD_KEY + "," + GAMES_P1_KEY + ","
-		  			+ GAMES_P2_KEY + "," + GAMES_LASTPLAYER_KEY + ")" + "VALUES ('" + field + "', '" + user1 + "', '" + user2 + "', '" + currentUser + "')";
+		  			+ GAMES_P2_KEY + "," + GAMES_CURRENTPLAYER_KEY + ")" + "VALUES ('" + field + "', '" + user1 + "', '" + user2 + "', '" + currentUser + "')";
 	    System.out.println(sql);
 	    stmt.executeUpdate(sql);
 	    System.out.println("update succesful");
@@ -77,7 +77,7 @@ public class JdbcDB {
 		
 	}
 
-	public void insertNewUser(String username, String userPw) throws SQLException {
+	public synchronized void insertNewUser(String username, String userPw) throws SQLException {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	      
@@ -90,7 +90,7 @@ public class JdbcDB {
 	    c.close();
 	}
 
-	public String getPwByUsername(String username1) throws SQLException {
+	public synchronized String getPwByUsername(String username1) throws SQLException {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
@@ -115,7 +115,7 @@ public class JdbcDB {
 	    }
 	}
 
-	public ArrayList<String[]> getAllUsers() throws SQLException {
+	public synchronized ArrayList<String[]> getAllUsers() throws SQLException {
 		ArrayList<String[]> users = new ArrayList<>();
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
@@ -138,11 +138,32 @@ public class JdbcDB {
 		return users;
 	}
 	
-	public void insertNewField(int id) {
-		//TODO
+	public synchronized void makeTurn(String id, String field) throws SQLException {
+		c = DriverManager.getConnection(datapath);
+	    stmt = c.createStatement();
+	    
+	    String sql = "UPDATE " + GAMES_TABLE + " SET " + GAMES_FIELD_KEY + "='" + field + "' WHERE " + GAMES_ID_KEY + "=" + id;
+	    stmt.executeUpdate(sql);
+	    
+	    String sql2 = "SELECT * FROM " + GAMES_TABLE + " WHERE " + GAMES_ID_KEY + "=" + id;
+	    
+	    ResultSet rs = stmt.executeQuery(sql2);
+	    String currentInDb = rs.getString(GAMES_CURRENTPLAYER_KEY);
+	    String p1 = rs.getString(GAMES_P1_KEY);
+	    String p2 = rs.getString(GAMES_P2_KEY);
+	    String sql3 = "";
+	    if(currentInDb.equals(p1)) {
+	    	sql3 = "UPDATE " + GAMES_TABLE + " SET " + GAMES_CURRENTPLAYER_KEY + "='" + p2 + "' WHERE " + GAMES_ID_KEY + "=" + id;
+	    } else if (currentInDb.equals(p2)) {
+	    	sql3 = "UPDATE " + GAMES_TABLE + " SET " + GAMES_CURRENTPLAYER_KEY + "='" + p1 + "' WHERE " + GAMES_ID_KEY + "=" + id;
+	    }
+	    stmt.executeUpdate(sql3);
+	    
+	    stmt.close();
+	    c.close();
 	}
 	
-	public ArrayList<String[]> getAllGamesOfUser(String user) throws SQLException {
+	public synchronized ArrayList<String[]> getAllGamesOfUser(String user) throws SQLException {
 		ArrayList<String[]> games = new ArrayList<>();
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
@@ -156,7 +177,7 @@ public class JdbcDB {
 	    	game[2] = rs.getString(GAMES_FIELD_KEY);
 	    	game[3] = rs.getString(GAMES_P1_KEY);
 	    	game[4] = rs.getString(GAMES_P2_KEY);
-	    	game[5] = rs.getString(GAMES_LASTPLAYER_KEY);
+	    	game[5] = rs.getString(GAMES_CURRENTPLAYER_KEY);
 	    	games.add(game);
 	      }
 	    stmt.close();
@@ -164,7 +185,7 @@ public class JdbcDB {
 		return games;
 	}
 
-	public ArrayList<String> getGameById(String id) throws SQLException {
+	public synchronized ArrayList<String> getGameById(String id) throws SQLException {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
@@ -188,7 +209,7 @@ public class JdbcDB {
 	    	result.add(rs.getString(GAMES_FIELD_KEY));
 	    	result.add(rs.getString(GAMES_P1_KEY));
 	    	result.add(rs.getString(GAMES_P2_KEY));
-	    	result.add(rs.getString(GAMES_LASTPLAYER_KEY));
+	    	result.add(rs.getString(GAMES_CURRENTPLAYER_KEY));
 	    	stmt.close();
 		    c.close();
 	    	return result;
