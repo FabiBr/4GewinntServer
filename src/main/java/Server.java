@@ -179,43 +179,4 @@ public class Server extends Thread {
 			}
 		}
 	}
-
-	/*
-	 * private Database db = new Database();
-	 * 
-	 * public void run() { ServerSocket sSocket = null;
-	 * 
-	 * try { sSocket = new ServerSocket(4444);
-	 * System.out.println("server is listening"); } catch (IOException e1) { //
-	 * TODO Auto-generated catch block e1.printStackTrace(); } while (true) {
-	 * Socket client = null;
-	 * 
-	 * try { //System.out.println("Client connected and handled"); client =
-	 * sSocket.accept(); handleConnection(client);
-	 * System.out.println("Client connected and handled"); } catch (IOException
-	 * e) { e.printStackTrace(); } finally { if (client != null) try {
-	 * client.close(); } catch (IOException e) { } } }
-	 * 
-	 * }
-	 * 
-	 * /*public static void startListening() throws IOException { (new
-	 * Server()).start(); }
-	 * 
-	 * public static void handleConnection(Socket client) throws IOException {
-	 * Scanner in = new Scanner(client.getInputStream()); PrintWriter out = new
-	 * PrintWriter(client.getOutputStream(), true); String sqlQuery =
-	 * in.nextLine(); System.out.println("something happened");
-	 * System.out.println(sqlQuery);
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * }
-	 * 
-	 * public static void main(String[] args) throws IOException { (new
-	 * Server()).start(); }
-	 */
-
 }

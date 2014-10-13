@@ -222,35 +222,3 @@ public class JdbcDB {
 	    }
 	}
 }
-
-/*
- * String CREATE_USER_TABLE = "create table if not exists" + USER_TABLE + " (" +
- * USER_ID_KEY + " integer primary key autoincrement, " + USER_NAME_KEY +
- * " text, " + USER_PW_KEY + " text, " + USER_GWON_KEY + " integer, " +
- * USER_GLOST_KEY + " integer, " + USER_PREMIUM_KEY + " integer)"; String
- * CREATE_GAMES_TABLE = "create table if not exists" + GAMES_TABLE + " (" +
- * GAMES_ID_KEY + " integer primary key autoincrement, " + GAMES_FIELD_KEY +
- * " text, " + GAMES_P1_KEY + " integer, " + GAMES_P2_KEY + " integer, " +
- * GAMES_LASTPLAYER_KEY + " integer)";
- */
-
-/*
- * public static void main(String args[]) { Connection c = null; Statement stmt
- * = null; try { Class.forName("org.sqlite.JDBC"); c =
- * DriverManager.getConnection("jdbc:sqlite:test.db");
- * System.out.println("Opened database successfully");
- * 
- * stmt = c.createStatement(); String CREATE_USER_TABLE =
- * "create table if not exists" + USER_TABLE + " (" + USER_ID_KEY +
- * " integer primary key autoincrement, " + USER_NAME_KEY + " text, " +
- * USER_PW_KEY + " text, " + USER_GWON_KEY + " integer, " + USER_GLOST_KEY +
- * " integer, " + USER_PREMIUM_KEY + " integer)"; String CREATE_GAMES_TABLE =
- * "create table if not exists" + GAMES_TABLE + " (" + GAMES_ID_KEY +
- * " integer primary key autoincrement, " + GAMES_FIELD_KEY + " text, " +
- * GAMES_P1_KEY + " integer, " + GAMES_P2_KEY + " integer, " +
- * GAMES_LASTPLAYER_KEY + " integer)"; stmt.executeUpdate(CREATE_USER_TABLE);
- * stmt.executeUpdate(CREATE_GAMES_TABLE); stmt.close(); c.close(); } catch
- * (Exception e) { System.err.println(e.getClass().getName() + ": " +
- * e.getMessage()); System.exit(0); }
- * System.out.println("Table created successfully"); } }
- */
