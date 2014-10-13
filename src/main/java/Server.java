@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.json.*;
 
-
-
-
 public class Server extends Thread {
 
 	private static ServerSocket serverSocket = null;
@@ -30,10 +27,9 @@ public class Server extends Thread {
 	private static final String GET_GAMES_KEY = "myGamesGet";
 	private static final String GET_GAME_BY_ID_KEY = "gameById";
 	private static final String MAKE_TURN_KEY = "fieldUpdate";
-	
 
 	public static void main(String[] args) throws IOException {
-		
+
 		Thread server = new Thread(new ServerThread());
 		server.start();
 
@@ -81,7 +77,6 @@ public class Server extends Thread {
 
 				this.input = new BufferedReader(new InputStreamReader(
 						this.clientSocket.getInputStream()));
-				
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -90,25 +85,25 @@ public class Server extends Thread {
 
 		public void run() {
 
-			//while (!Thread.currentThread().isInterrupted()) {
+			// while (!Thread.currentThread().isInterrupted()) {
 
-				try {
-					String read = input.readLine();
-					String callback = handleConnection(read);
-					output = new PrintWriter(
-							new BufferedWriter(new OutputStreamWriter(
-									clientSocket.getOutputStream())), true);
-					output.println(callback);
-					output.flush();
-					System.out.println(read);
+			try {
+				String read = input.readLine();
+				String callback = handleConnection(read);
+				output = new PrintWriter(
+						new BufferedWriter(new OutputStreamWriter(
+								clientSocket.getOutputStream())), true);
+				output.println(callback);
+				output.flush();
+				System.out.println(read);
 
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			//}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// }
 		}
 
 		private String handleConnection(String read) throws SQLException {
@@ -137,7 +132,7 @@ public class Server extends Thread {
 			case INCREMENT_USER_WIN_KEY:
 
 				return null;
-				
+
 			case GET_GAMES_KEY:
 				String user = data.get(1);
 				ArrayList<String[]> allGamesData = myDb.getAllGamesOfUser(user);
@@ -145,42 +140,44 @@ public class Server extends Thread {
 				String gamesOut = gamesList.toString();
 				System.out.println(gamesOut);
 				return gamesOut;
-				
+
 			case GET_GAME_BY_ID_KEY:
 				String id = data.get(1);
 				ArrayList<String> gameData = myDb.getGameById(id);
 				JSONArray thisData = new JSONArray(gameData);
 
 				return thisData.toString();
-			
+
 			case GET_ALL_USERS_KEY:
 				ArrayList<String[]> allUsersData = myDb.getAllUsers();
 				JSONArray list = new JSONArray(allUsersData);
 				String usersOut = list.toString();
 				System.out.println(usersOut);
 				return usersOut;
-				
+
 			case PASSWORD_CHECK_KEY:
-				
+
 				String username1 = data.get(1);
-				String savedPw = myDb.getPwByUsername(username1);
-				if(savedPw.equals(data.get(2))) {
-					return "1";
+				ArrayList<String> userData = myDb.getPwByUsername(username1);
+				if (userData != null) {
+					String savedPw = userData.get(2);
+					if (savedPw.equals(data.get(2))) {
+						JSONArray newUserData = new JSONArray(userData);
+						return newUserData.toString();
+					}
 				}
-				return "Wrong password";
-				
+				return "0";
+
 			case MAKE_TURN_KEY:
 				String thisId = data.get(1);
 				String thisField = data.get(2);
 				myDb.makeTurn(thisId, thisField);
 				return "";
 
-
 			default:
 				return null;
 			}
 		}
-
 	}
 
 	/*

@@ -90,11 +90,11 @@ public class JdbcDB {
 	    c.close();
 	}
 
-	public synchronized String getPwByUsername(String username1) throws SQLException {
+	public synchronized ArrayList<String> getPwByUsername(String username1) throws SQLException {
 		c = DriverManager.getConnection(datapath);
 	    stmt = c.createStatement();
 	    
-	    String sql = "SELECT " + USER_PW_KEY + " FROM " + USER_TABLE + " WHERE " + USER_NAME_KEY + "=" + "'" + username1 + "'";
+	    String sql = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME_KEY + "=" + "'" + username1 + "'";
 	    ResultSet rs = stmt.executeQuery(sql);
 	    
 	    
@@ -105,13 +105,19 @@ public class JdbcDB {
 	    if(isEmpty) {
 	    	stmt.close();
 		    c.close();
-	    	return "";
+	    	return null;
 	    } else {
+	    	ArrayList<String> userData = new ArrayList<String>();
 	    	rs = stmt.executeQuery(sql);
-	    	String pw = rs.getString(USER_PW_KEY);
+	    	userData.add(rs.getString(USER_ID_KEY));
+	    	userData.add(rs.getString(USER_NAME_KEY));
+	    	userData.add(rs.getString(USER_PW_KEY));
+	    	userData.add(rs.getString(USER_GWON_KEY));
+	    	userData.add(rs.getString(USER_GLOST_KEY));
+	    	userData.add(rs.getString(USER_PREMIUM_KEY));
 	    	stmt.close();
 		    c.close();
-	    	return pw;
+	    	return userData;
 	    }
 	}
 
